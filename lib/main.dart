@@ -23,3 +23,10 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+// flutter build web
+
+// cd build/web
+// python -m http.server 8080
+
+// http://localhost:8080
