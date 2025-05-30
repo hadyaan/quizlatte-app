@@ -2,18 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  static const Color primaryColor = Color(0xFF6C6EFF);
-  static const Color secondaryColor = Color(0xFF32CD32);
-  static const Color backgroundColor = Color(0xFFF8F9FC);
-  static const Color cardColor = Colors.white;
-  static const Color textPrimaryColor = Color(0xFF2D3748);
-  static const Color textSecondaryColor = Color(0xFF718096);
+  // 🌈 Warna utama & sekunder
+  static const Color primaryColor = Color(0xFF6C6EFF); // Tetap ungu
+  static const Color secondaryColor = Color(0xFF32CD32); // Tetap hijau
+
+  // 🌌 Warna dark mode
+  static const Color backgroundColor = Color(0xFF121212); // Latar belakang utama
+  static const Color cardColor = Color.fromARGB(255, 37, 37, 37); // Warna kartu // opsi warna lain : 0xFF1E1E1E
+  static const Color textPrimaryColor = Color(0xFFEAEAEA); // Teks utama terang
+  static const Color textSecondaryColor = Color(0xFF9E9E9E); // Teks sekunder abu-abu
 
   static ThemeData get theme {
     return ThemeData(
+      brightness: Brightness.dark,
       primaryColor: primaryColor,
       scaffoldBackgroundColor: backgroundColor,
-      textTheme: GoogleFonts.poppinsTextTheme(),
+      textTheme: GoogleFonts.poppinsTextTheme().apply(
+        bodyColor: textPrimaryColor,
+        displayColor: textPrimaryColor,
+      ),
       appBarTheme: AppBarTheme(
         backgroundColor: cardColor,
         foregroundColor: textPrimaryColor,
@@ -25,7 +32,7 @@ class AppTheme {
         color: cardColor,
         elevation: 2,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadiusGeometry.circular(16),
+          borderRadius: BorderRadius.circular(16),
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -34,13 +41,13 @@ class AppTheme {
           foregroundColor: Colors.white,
           padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadiusGeometry.circular(12),
+            borderRadius: BorderRadius.circular(12),
           ),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: backgroundColor,
+        fillColor: Color(0xFF2A2A2A),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
