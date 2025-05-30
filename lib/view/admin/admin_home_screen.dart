@@ -59,11 +59,16 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     return '${date.day}/${date.month}/${date.year}';
   }
 
-  Widget buildStatCard(String title, String value, IconData icon, Color color) {
-    return Card(
+ Widget buildStatCard(String title, String value, IconData icon, Color color) {
+  return AspectRatio(
+    aspectRatio: 1 / 1.2, // Ukuran tetap untuk kedua kotak
+    child: Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 3,
       child: Padding(
-        padding: EdgeInsetsGeometry.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
@@ -72,31 +77,32 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 color: color.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon, color: color, size: 25),
+              child: Icon(icon, color: color, size: 24),
             ),
-
-            SizedBox(height: 16),
             Text(
               value,
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 26,
                 fontWeight: FontWeight.bold,
                 color: AppTheme.textPrimaryColor,
               ),
             ),
-            SizedBox(height: 4),
             Text(
-              title,
+              title.replaceAll(' ', '\n'), // ini membuat teks menjadi dua baris otomatis
+              textAlign: TextAlign.start,
               style: TextStyle(
                 fontSize: 14,
+                height: 1.2,
                 color: AppTheme.textSecondaryColor,
               ),
             ),
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Widget _buildDashboardCard(
     BuildContext context,
@@ -105,11 +111,13 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     VoidCallback onTap,
   ) {
     return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
         child: Padding(
-          padding: EdgeInsetsGeometry.all(20),
+          padding: const EdgeInsets.all(16),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -121,15 +129,19 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 ),
                 child: Icon(icon, color: AppTheme.primaryColor, size: 32),
               ),
-
-              SizedBox(height: 16),
-              Text(
-                title,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.textPrimaryColor,
+              SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                child: Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.textPrimaryColor,
+                  ),
                 ),
               ),
             ],
@@ -429,8 +441,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
                             mainAxisSpacing: 16,
-                            childAspectRatio: 0.9,
                             crossAxisSpacing: 16,
+                            childAspectRatio: 0.7,
                             children: [
                               _buildDashboardCard(
                                 context,

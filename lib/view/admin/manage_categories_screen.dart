@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz/model/category.dart';
 import 'package:quiz/theme/theme.dart';
+import 'package:quiz/view/admin/add_category_screen.dart';
 import 'package:quiz/view/admin/manage_quizzes_screen.dart';
 
 class ManageCategoriesScreen extends StatefulWidget {
@@ -24,7 +25,12 @@ class _ManageCategoriesScreen extends State<ManageCategoriesScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddCategoryScreen()),
+              );
+            },
             icon: Icon(Icons.add_circle_outline, color: AppTheme.primaryColor),
           ),
         ],
@@ -71,7 +77,17 @@ class _ManageCategoriesScreen extends State<ManageCategoriesScreen> {
                   ),
                   SizedBox(height: 8),
 
-                  ElevatedButton(onPressed: () {}, child: Text("Add Category")),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddCategoryScreen(),
+                        ),
+                      );
+                    },
+                    child: Text("Add Category"),
+                  ),
                 ],
               ),
             );
@@ -152,12 +168,12 @@ class _ManageCategoriesScreen extends State<ManageCategoriesScreen> {
     Category category,
   ) async {
     if (action == "edit") {
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => AddCategoryScreen(category: category),
-      //   ),
-      // );
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AddCategoryScreen(category: category),
+        ),
+      );
     } else if (action == "delete") {
       final confirm = await showDialog<bool>(
         context: context,

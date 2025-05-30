@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:quiz/model/category.dart';
 import 'package:quiz/model/quiz.dart';
 import 'package:quiz/theme/theme.dart';
+import 'package:quiz/view/admin/add_quiz_screen.dart';
 
 class ManageQuizzesScreen extends StatefulWidget {
   final String? categoryId;
@@ -107,7 +108,13 @@ class _ManageQuizzesScreenState extends State<ManageQuizzesScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              // Navigator.push(context, MaterialPageRoute(builder: builder) => AddQuiz)
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      AddQuizScreen(categoryId: widget.categoryId),
+                ),
+              );
             },
             icon: Icon(Icons.add_circle_outline, color: AppTheme.primaryColor),
           ),
@@ -221,7 +228,16 @@ class _ManageQuizzesScreenState extends State<ManageQuizzesScreen> {
                         ),
                         SizedBox(height: 8),
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AddQuizScreen(
+                                  categoryId: widget.categoryId,
+                                ),
+                              ),
+                            );
+                          },
                           child: Text("Add Quiz"),
                         ),
                       ],
