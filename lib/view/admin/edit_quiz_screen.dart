@@ -142,6 +142,7 @@ class _EditQuizScreenState extends State<EditQuizScreen> {
           backgroundColor: AppTheme.secondaryColor,
         ),
       );
+      Navigator.pop(context);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

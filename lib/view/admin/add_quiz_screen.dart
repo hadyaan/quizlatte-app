@@ -131,6 +131,7 @@ class _AddQuizScreenState extends State<AddQuizScreen> {
           backgroundColor: AppTheme.secondaryColor,
         ),
       );
+      Navigator.pop(context);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

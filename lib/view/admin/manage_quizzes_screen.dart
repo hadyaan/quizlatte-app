@@ -278,13 +278,12 @@ class _ManageQuizzesScreenState extends State<ManageQuizzesScreen> {
                             fontSize: 16,
                           ),
                         ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 8),
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
+                        subtitle: Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
                                 children: [
                                   Icon(
                                     Icons.question_answer_outlined,
@@ -292,14 +291,18 @@ class _ManageQuizzesScreenState extends State<ManageQuizzesScreen> {
                                   ),
                                   SizedBox(width: 4),
                                   Text("${quiz.questions.length} Questions"),
-                                  SizedBox(width: 16),
+                                ],
+                              ),
+                              SizedBox(height: 4),
+                              Row(
+                                children: [
                                   Icon(Icons.timer_outlined, size: 16),
                                   SizedBox(width: 4),
                                   Text("${quiz.timeLImit} mins"),
                                 ],
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                         trailing: PopupMenuButton(
                           itemBuilder: (context) => [
