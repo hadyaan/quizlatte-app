@@ -39,7 +39,7 @@ class Quiz {
       'categoryId': categoryId,
       'timeLimit': timeLImit,
       'questions': questions.map((e) => e.toMap()).toList(),
-      'updatedAt': DateTime.now(),
+      'createdAt': DateTime.now(),
     };
   }
 
@@ -55,7 +55,6 @@ class Quiz {
       categoryId: categoryId ?? this.categoryId,
       timeLImit: timeLimit ?? timeLImit, // <--------------------
       questions: questions ?? this.questions,
-      createdAt: createdAt,
       updatedAt: DateTime.now(),
     );
   }

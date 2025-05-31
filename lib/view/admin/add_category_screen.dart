@@ -157,9 +157,9 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                   TextFormField(
                     controller: _nameController,
                     decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(vertical: 20),
-                      fillColor: Colors
-                          .white, // <-------------------------------------
+                      contentPadding: EdgeInsets.all(20),
+                      fillColor: AppTheme
+                          .cardColor, // <-------------------------------------
                       labelText: "Category Name",
                       hintText: "Enter category name",
                       prefix: Icon(
@@ -175,8 +175,8 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                   TextFormField(
                     controller: _descriptionController,
                     decoration: InputDecoration(
-                      fillColor: Colors
-                          .white, // <-------------------------------------
+                      fillColor: AppTheme
+                          .cardColor, // <-------------------------------------
 
                       labelText: "Description",
                       hintText: "Enter category description",
@@ -212,8 +212,10 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                               widget.category != null
                                   ? "Update Category"
                                   : "Add Category",
-                              style: TextStyle(fontSize: 16,
-                              fontWeight: FontWeight.bold,),
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                     ),
                   ),

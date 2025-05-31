@@ -4,10 +4,13 @@ import 'package:quiz/model/category.dart';
 import 'package:quiz/model/quiz.dart';
 import 'package:quiz/theme/theme.dart';
 import 'package:quiz/view/admin/add_quiz_screen.dart';
+import 'package:quiz/view/admin/edit_quiz_screen.dart';
 
 class ManageQuizzesScreen extends StatefulWidget {
   final String? categoryId;
-  const ManageQuizzesScreen({super.key, this.categoryId});
+  final String? categoryName;
+
+  const ManageQuizzesScreen({super.key, this.categoryId, this.categoryName});
 
   @override
   State<ManageQuizzesScreen> createState() => _ManageQuizzesScreenState();
@@ -111,8 +114,10 @@ class _ManageQuizzesScreenState extends State<ManageQuizzesScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      AddQuizScreen(categoryId: widget.categoryId),
+                  builder: (context) => AddQuizScreen(
+                    categoryId: widget.categoryId,
+                    categoryName: widget.categoryName,
+                  ),
                 ),
               );
             },
@@ -123,11 +128,11 @@ class _ManageQuizzesScreenState extends State<ManageQuizzesScreen> {
       body: Column(
         children: [
           Padding(
-            padding: EdgeInsets.all(12),
+            padding: EdgeInsets.all(16),
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                fillColor: Colors.white,
+                fillColor: AppTheme.cardColor,
                 hintText: "Search Quizzes",
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(
@@ -142,10 +147,10 @@ class _ManageQuizzesScreenState extends State<ManageQuizzesScreen> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(12),
+            padding: EdgeInsets.all(16),
             child: DropdownButtonFormField<String>(
               decoration: InputDecoration(
-                fillColor: Colors.white,
+                fillColor: AppTheme.cardColor,
                 contentPadding: EdgeInsets.symmetric(
                   horizontal: 10,
                   vertical: 18,
@@ -234,6 +239,7 @@ class _ManageQuizzesScreenState extends State<ManageQuizzesScreen> {
                               MaterialPageRoute(
                                 builder: (context) => AddQuizScreen(
                                   categoryId: widget.categoryId,
+                                  categoryName: widget.categoryName,
                                 ),
                               ),
                             );
@@ -246,7 +252,7 @@ class _ManageQuizzesScreenState extends State<ManageQuizzesScreen> {
                 }
 
                 return ListView.builder(
-                  padding: EdgeInsets.all(16),
+                  padding: EdgeInsets.all(20),
                   itemCount: quizzes.length,
                   itemBuilder: (context, index) {
                     final Quiz quiz = quizzes[index];
@@ -276,16 +282,22 @@ class _ManageQuizzesScreenState extends State<ManageQuizzesScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(height: 8),
-                            Row(
-                              children: [
-                                Icon(Icons.question_answer_outlined, size: 16),
-                                SizedBox(width: 4),
-                                Text("${quiz.questions.length} Questions"),
-                                SizedBox(width: 16),
-                                Icon(Icons.timer_outlined, size: 16),
-                                SizedBox(width: 4),
-                                Text("${quiz.timeLImit} mins"),
-                              ],
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.question_answer_outlined,
+                                    size: 16,
+                                  ),
+                                  SizedBox(width: 4),
+                                  Text("${quiz.questions.length} Questions"),
+                                  SizedBox(width: 16),
+                                  Icon(Icons.timer_outlined, size: 16),
+                                  SizedBox(width: 4),
+                                  Text("${quiz.timeLImit} mins"),
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -335,7 +347,10 @@ class _ManageQuizzesScreenState extends State<ManageQuizzesScreen> {
     Quiz quiz,
   ) async {
     if (value == "edit") {
-      // Navigator.push(context, MaterialPageRoute(builder: builder) => EditQuizScreen())
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => EditQuizScreen(quiz: quiz)),
+      );
     } else if (value == "delete") {
       final confirm = await showDialog<bool>(
         context: context,

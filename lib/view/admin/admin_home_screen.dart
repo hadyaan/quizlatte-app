@@ -59,50 +59,52 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     return '${date.day}/${date.month}/${date.year}';
   }
 
- Widget buildStatCard(String title, String value, IconData icon, Color color) {
-  return AspectRatio(
-    aspectRatio: 1 / 1.2, // Ukuran tetap untuk kedua kotak
-    child: Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 3,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
+  Widget buildStatCard(String title, String value, IconData icon, Color color) {
+    return AspectRatio(
+      aspectRatio: 1 / 1.2, // Ukuran tetap untuk kedua kotak
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        elevation: 3,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, color: color, size: 24),
               ),
-              child: Icon(icon, color: color, size: 24),
-            ),
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
-                color: AppTheme.textPrimaryColor,
+              Text(
+                value,
+                style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textPrimaryColor,
+                ),
               ),
-            ),
-            Text(
-              title.replaceAll(' ', '\n'), // ini membuat teks menjadi dua baris otomatis
-              textAlign: TextAlign.start,
-              style: TextStyle(
-                fontSize: 14,
-                height: 1.2,
-                color: AppTheme.textSecondaryColor,
+              Text(
+                title.replaceAll(
+                  ' ',
+                  '\n',
+                ), // ini membuat teks menjadi dua baris otomatis
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontSize: 14,
+                  height: 1.2,
+                  color: AppTheme.textSecondaryColor,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   Widget _buildDashboardCard(
     BuildContext context,

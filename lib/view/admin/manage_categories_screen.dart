@@ -149,7 +149,7 @@ class _ManageCategoriesScreen extends State<ManageCategoriesScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            ManageQuizzesScreen(categoryId: category.id),
+                            ManageQuizzesScreen(categoryId: category.id, categoryName: category.name,),
                       ),
                     );
                   },
