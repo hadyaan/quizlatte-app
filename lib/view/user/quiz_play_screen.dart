@@ -5,6 +5,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:quiz/model/question.dart';
 import 'package:quiz/model/quiz.dart';
 import 'package:quiz/theme/theme.dart';
+import 'package:quiz/view/user/quiz_result_screen.dart';
 
 class QuizPlayScreen extends StatefulWidget {
   final Quiz quiz;
@@ -59,7 +60,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen>
   void _selectAnswer(int optionIndex) {
     if (_selectedAnswer[_currentQuestionIndex] == null) {
       setState(() {
-        _selectedAnswer[_currentQuestionIndex] == optionIndex;
+        _selectedAnswer[_currentQuestionIndex] = optionIndex;
       });
     }
   }
@@ -78,20 +79,20 @@ class _QuizPlayScreenState extends State<QuizPlayScreen>
   void _completeQuiz() {
     _timer?.cancel();
     int correctAnswers = _calculateScroe();
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text("Quiz Completed")));
-    // Navigator.pushReplacement(
+    // ScaffoldMessenger.of(
     //   context,
-    //   MaterialPageRoute(
-    //     builder: QuizResultScreen(
-    //       quiz: widget.quiz,
-    //       totalQuestions: widget.quiz.questions.length,
-    //       correctAnswers: correctAnswers,
-    //       selectedAnswers: _selectedAnswer,
-    //     ),
-    //   ),
-    // );
+    // ).showSnackBar(SnackBar(content: Text("Quiz Completed")));
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => QuizResultScreen(
+          quiz: widget.quiz,
+          totalQuestions: widget.quiz.questions.length,
+          correctAnswers: correctAnswers,
+          selectedAnswer: _selectedAnswer,
+        ),
+      ),
+    );
   }
 
   int _calculateScroe() {
@@ -127,7 +128,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.primaryColor,
+      backgroundColor: AppTheme.backgroundHome,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,7 +137,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen>
               margin: EdgeInsets.all(12),
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppTheme.surfaceHome,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
@@ -156,7 +157,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen>
                           Navigator.pop(context);
                         },
                         icon: Icon(Icons.close),
-                        color: AppTheme.textPrimaryColor,
+                        color: AppTheme.primaryHome,
                       ),
                       Stack(
                         alignment: Alignment.center,
@@ -205,7 +206,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen>
                         value: progress,
                         backgroundColor: Colors.grey[300],
                         valueColor: AlwaysStoppedAnimation<Color>(
-                          AppTheme.primaryColor,
+                          Color(0xFF4CAF50),
                         ),
                         minHeight: 6,
                       );
@@ -241,7 +242,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen>
       margin: EdgeInsets.all(16),
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.primaryHome,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -256,15 +257,15 @@ class _QuizPlayScreenState extends State<QuizPlayScreen>
         children: [
           Text(
             'Question ${index + 1}',
-            style: TextStyle(fontSize: 16, color: AppTheme.textSecondaryColor),
+            style: TextStyle(fontSize: 16, color: Colors.white),
           ),
-          SizedBox(height: 8),
+          SizedBox(height: 12),
           Text(
             question.text,
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: AppTheme.textPrimaryColor,
+              color: Colors.white,
             ),
           ),
           SizedBox(height: 24),
@@ -284,7 +285,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen>
                           ? isCorrect
                                 ? AppTheme.secondaryColor.withOpacity(0.1)
                                 : Colors.redAccent.withOpacity(0.1)
-                          : Colors.white,
+                          : AppTheme.surfaceHome,
 
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
@@ -310,7 +311,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen>
                                     : Colors.redAccent
                               : _selectedAnswer[index] != null
                               ? Colors.grey.shade500
-                              : AppTheme.textPrimaryColor,
+                              : AppTheme.backgroundColor,
                         ),
                       ),
                       trailing: isSelected
@@ -337,6 +338,9 @@ class _QuizPlayScreenState extends State<QuizPlayScreen>
             width: double.infinity,
             height: 55,
             child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF4CAF50),
+              ),
               onPressed: () {
                 _selectedAnswer[index] != null ? _nextQuestion() : null;
               },

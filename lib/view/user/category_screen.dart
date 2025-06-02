@@ -51,9 +51,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.backgroundHome,
       body: _isLoading
           ? Center(
-              child: CircularProgressIndicator(color: AppTheme.primaryColor),
+              child: CircularProgressIndicator(color: AppTheme.primaryHome),
             )
           : _quizzes.isEmpty
           ? Center(
@@ -63,22 +64,34 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   Icon(
                     Icons.quiz_outlined,
                     size: 64,
-                    color: AppTheme.textSecondaryColor,
+                    color: AppTheme.backgroundColor,
                   ),
                   SizedBox(height: 16),
                   Text(
                     "No quizzes available in this category",
                     style: TextStyle(
                       fontSize: 16,
-                      color: AppTheme.textSecondaryColor,
+                      color: AppTheme.backgroundColor,
                     ),
                   ),
                   SizedBox(height: 16),
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          AppTheme.primaryHome, // Warna background tombol
+                      foregroundColor: Colors.white, // Warna teks tombol
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: Text("Go back"),
+                    child: Text("Go back", style: TextStyle(fontSize: 16)),
                   ),
                 ],
               ),
@@ -86,8 +99,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
           : CustomScrollView(
               slivers: [
                 SliverAppBar(
-                  foregroundColor: Colors.white,
-                  backgroundColor: AppTheme.primaryColor,
+                  foregroundColor: Color(0xFFFFF8E1),
+                  backgroundColor: AppTheme.primaryHome,
                   expandedHeight: 230,
                   floating: false,
                   pinned: true,
@@ -104,7 +117,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       child: Text(
                         widget.category.description,
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white70, fontSize: 12),
+                        style: TextStyle(
+                          color: AppTheme.surfaceHome,
+                          fontSize: 12,
+                        ),
                       ),
                     ),
                     background: Center(
@@ -114,18 +130,18 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           Icon(
                             Icons.category_rounded,
                             size: 64,
-                            color: Colors.white,
+                            color: AppTheme.surfaceHome,
                           ),
-                          SizedBox(height: 16),
+                          SizedBox(height: 4),
                           Text(
                             widget.category.name,
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: AppTheme.surfaceHome,
                             ),
                           ),
-                          SizedBox(height: 30),
+                          SizedBox(height: 24),
                         ],
                       ),
                     ),
@@ -162,7 +178,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => QuizPlayScreen(quiz: quiz)),
+                MaterialPageRoute(
+                  builder: (context) => QuizPlayScreen(quiz: quiz),
+                ),
               );
             },
             child: Padding(
@@ -172,12 +190,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   Container(
                     padding: EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: AppTheme.primaryColor.withOpacity(0.1),
+                      color: AppTheme.surfaceHome,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
                       Icons.quiz_rounded,
-                      color: AppTheme.primaryColor,
+                      color: AppTheme.primaryHome,
                       size: 32,
                     ),
                   ),
@@ -191,7 +209,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: AppTheme.textPrimaryColor,
+                            color: AppTheme.backgroundColor,
                           ),
                         ),
                         Column(
@@ -200,13 +218,31 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             SizedBox(height: 8),
                             Row(
                               children: [
-                                Icon(Icons.question_answer_outlined, size: 16),
+                                Icon(
+                                  Icons.question_answer_outlined,
+                                  size: 16,
+                                  color: AppTheme.backgroundColor,
+                                ),
                                 SizedBox(width: 4),
-                                Text('${quiz.questions.length} Questions'),
+                                Text(
+                                  '${quiz.questions.length} Questions',
+                                  style: TextStyle(
+                                    color: AppTheme.backgroundColor,
+                                  ),
+                                ),
                                 SizedBox(width: 16),
-                                Icon(Icons.timer_outlined, size: 16),
+                                Icon(
+                                  Icons.timer_outlined,
+                                  size: 16,
+                                  color: AppTheme.backgroundColor,
+                                ),
                                 SizedBox(width: 4),
-                                Text('${quiz.timeLImit} mins'),
+                                Text(
+                                  '${quiz.timeLImit} mins',
+                                  style: TextStyle(
+                                    color: AppTheme.backgroundColor,
+                                  ),
+                                ),
                               ],
                             ),
                           ],
@@ -217,7 +253,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   Icon(
                     Icons.chevron_right_rounded,
                     size: 30,
-                    color: AppTheme.primaryColor,
+                    color: AppTheme.primaryHome,
                   ),
                 ],
               ),

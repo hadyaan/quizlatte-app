@@ -2,8 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:quiz/model/category.dart';
-import 'package:quiz/theme/theme.dart';
+import 'package:quiz/theme/theme.dart'; // Pastikan AppTheme.surfaceHome dan AppTheme.backgroundColor didefinisikan dengan baik di sini
 import 'package:quiz/view/user/category_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,12 +20,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<String> _categoryFilters = ['All'];
   String _selectedFilter = "All";
+  late FocusNode _searchFocusNode;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _fetchCategories();
+    _searchFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _searchFocusNode.dispose();
+    super.dispose();
   }
 
   Future<void> _fetchCategories() async {
@@ -66,7 +75,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.backgroundColor,
+      backgroundColor:
+          AppTheme.backgroundHome, // Warna latar belakang scaffolding
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
@@ -74,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
             pinned: true,
             floating: true,
             centerTitle: false,
-            backgroundColor: AppTheme.primaryColor,
+            backgroundColor: AppTheme.primaryHome, // Warna coklat gelap
             elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
@@ -83,12 +93,13 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             title: Text(
-              "Smart Quiz",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+              "Quizoria",
+              style: GoogleFonts.pacifico(),
+              // TextStyle(
+              //   fontSize: 24,
+              //   fontWeight: FontWeight.bold,
+              //   color: Colors.white,
+              // ),
             ),
             flexibleSpace: FlexibleSpaceBar(
               background: SafeArea(
@@ -101,55 +112,75 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Welcome, Learner!",
+                            "Welcome Back!",
                             style: TextStyle(
                               fontSize: 28,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: Color(0xFFFFF8E1), // Krem Muda
                             ),
                           ),
                           SizedBox(height: 8),
                           Text(
-                            "Let's test your knowledge today!",
+                            "Let’s level up your brain today",
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white.withOpacity(0.8),
+                              color: Color(0xFFFFF8E1), // Krem Muda
                             ),
                           ),
                           SizedBox(height: 16),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  blurRadius: 4,
-                                  offset: Offset(0, 2),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    blurRadius: 4,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: TextField(
+                                controller: _searchController,
+                                focusNode: _searchFocusNode,
+                                onChanged: (value) => _filterCategories(value),
+                                decoration: InputDecoration(
+                                  fillColor: AppTheme
+                                      .surfaceHome, // Warna latar belakang untuk input search
+                                  filled: true, // Penting untuk fillColor
+                                  hintText: "Search categories...",
+                                  prefixIcon: Icon(
+                                    Icons.search,
+                                    color: AppTheme
+                                        .primaryHome, // Warna coklat gelap
+                                  ),
+                                  suffixIcon: _searchController.text.isNotEmpty
+                                      ? IconButton(
+                                          onPressed: () {
+                                            _searchController.clear();
+                                            _filterCategories('');
+                                          },
+                                          icon: Icon(Icons.clear),
+                                          color: AppTheme.primaryHome,
+                                        )
+                                      : null,
+                                  enabledBorder: OutlineInputBorder(
+                                    // Border saat TextField tidak difokus
+                                    borderRadius: BorderRadius.circular(8),
+                                    borderSide: BorderSide(
+                                      color: Colors
+                                          .black, // Warna border saat tidak fokus
+                                      width: 2.0,
+                                    ),
+                                  ),
+                                  // border: InputBorder.none,
+                                  contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 14,
+                                  ),
                                 ),
-                              ],
-                            ),
-                            child: TextField(
-                              controller: _searchController,
-                              onChanged: (value) => _filterCategories(value),
-                              decoration: InputDecoration(
-                                hintText: "Search categories...",
-                                prefixIcon: Icon(
-                                  Icons.search,
-                                  color: AppTheme.primaryColor,
-                                ),
-                                suffixIcon: _searchController.text.isNotEmpty
-                                    ? IconButton(
-                                        onPressed: () {
-                                          _searchController.clear();
-                                          _filterCategories('');
-                                        },
-                                        icon: Icon(Icons.clear),
-                                        color: AppTheme.primaryColor,
-                                      )
-                                    : null,
-                                border: InputBorder.none,
                               ),
                             ),
                           ),
@@ -166,6 +197,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Container(
               margin: EdgeInsets.all(16),
               height: 40,
+
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: _categoryFilters.length,
@@ -174,18 +206,27 @@ class _HomeScreenState extends State<HomeScreen> {
                   return Padding(
                     padding: EdgeInsets.only(right: 8),
                     child: ChoiceChip(
-                      // <----------- filter box scroll horizontal
                       label: Text(
                         filter,
                         style: TextStyle(
                           color: _selectedFilter == filter
-                              ? AppTheme.textPrimaryColor
-                              : Colors.black,
+                              ? AppTheme
+                                    .textPrimaryColor // Warna teks untuk selected filter
+                              : AppTheme
+                                    .backgroundColor, // Warna teks untuk unselected filter (disarankan menggunakan warna yang kontras dengan backgroundColor chip)
                         ),
                       ),
                       selected: _selectedFilter == filter,
-                      selectedColor: AppTheme.primaryColor,
-                      backgroundColor: Colors.white,
+                      selectedColor: AppTheme.primaryHome, // Warna coklat gelap
+                      backgroundColor: AppTheme.backgroundHome,
+                      side: BorderSide(
+                        color: _selectedFilter == filter
+                            ? AppTheme
+                                  .primaryHome // warna border saat selected
+                            : AppTheme
+                                  .backgroundColor, // warna border saat tidak selected
+                        width: 2.0,
+                      ), // Warna latar belakang chip unselected (krem/beige)
                       onSelected: (bool selected) {
                         setState(() {
                           _selectedFilter = filter;
@@ -222,7 +263,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisCount: 2,
                       mainAxisSpacing: 16,
                       crossAxisSpacing: 16,
-                      childAspectRatio: 0.8,
+                      childAspectRatio: 0.6,
                     ),
                   ),
           ),
@@ -233,9 +274,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildCategoryCard(Category category, int index) {
     return Card(
-          elevation: 0,
+          elevation:
+              6, // Meningkatkan elevasi sedikit agar border lebih terlihat
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
+            side: BorderSide(
+              width: 2.0, // Lebar border
+            ),
           ),
           child: InkWell(
             borderRadius: BorderRadius.circular(16),
@@ -248,6 +293,8 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             },
             child: Container(
+              // Tambahkan warna background pada container agar card tidak transparan di dalamnya
+              // Menggunakan warna latar belakang krem/beige untuk isi card
               padding: EdgeInsets.all(16),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -255,33 +302,36 @@ class _HomeScreenState extends State<HomeScreen> {
                   Container(
                     padding: EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: AppTheme.primaryColor.withOpacity(0.1),
+                      color: AppTheme
+                          .surfaceHome, // Warna latar belakang icon (bisa sama dengan backgroundHome atau warna lain yang kontras)
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
                       Icons.quiz,
                       size: 48,
-                      color: AppTheme.primaryColor,
+                      color: AppTheme.primaryHome, // Warna coklat gelap
                     ),
                   ),
                   SizedBox(height: 16),
                   Text(
                     category.name,
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: AppTheme.textPrimaryColor,
+                      color: AppTheme
+                          .backgroundColor, // Menggunakan warna teks utama (misal coklat gelap atau hitam)
                     ),
                   ),
                   SizedBox(height: 16),
                   Text(
                     category.description,
                     style: TextStyle(
-                      fontSize: 14,
-                      color: AppTheme.textSecondaryColor,
+                      fontSize: 12,
+                      color: AppTheme
+                          .backgroundColor, // Menggunakan warna teks sekunder (misal abu-abu gelap)
                     ),
                     textAlign: TextAlign.center,
-                    maxLines: 2,
+                    maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],

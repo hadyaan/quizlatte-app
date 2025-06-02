@@ -63,6 +63,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     return AspectRatio(
       aspectRatio: 1 / 1.2, // Ukuran tetap untuk kedua kotak
       child: Card(
+        color: AppTheme.cardColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         elevation: 3,
         child: Padding(
@@ -111,8 +112,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     String title,
     IconData icon,
     VoidCallback onTap,
+    Color color,
   ) {
     return Card(
+      color: AppTheme.cardColor,
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
@@ -229,6 +232,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
 
                   SizedBox(height: 24),
                   Card(
+                    color: AppTheme.cardColor,
                     child: Padding(
                       padding: EdgeInsets.all(20),
                       child: Column(
@@ -327,6 +331,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   ),
                   SizedBox(height: 24),
                   Card(
+                    color: AppTheme.cardColor,
                     child: Padding(
                       padding: EdgeInsets.all(20),
                       child: Column(
@@ -414,6 +419,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   ),
                   SizedBox(height: 24),
                   Card(
+                    color: AppTheme.cardColor,
                     child: Padding(
                       padding: EdgeInsets.all(20),
                       child: Column(
@@ -459,6 +465,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                                     ),
                                   );
                                 },
+                                AppTheme.textHome,
+                                
                               ),
                               _buildDashboardCard(
                                 context,
@@ -473,6 +481,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                                     ),
                                   );
                                 },
+                                Colors.blue,
                               ),
                             ],
                           ),

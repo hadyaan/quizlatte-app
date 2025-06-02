@@ -31,7 +31,7 @@ class _QuizResultScreenState extends State<QuizResultScreen> {
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.surfaceHome,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -119,7 +119,7 @@ class _QuizResultScreenState extends State<QuizResultScreen> {
     final score = widget.correctAnswers / widget.totalQuestions;
     final scorePercentage = (score * 100).round();
     return Scaffold(
-      backgroundColor: AppTheme.backgroundColor,
+      backgroundColor: AppTheme.backgroundHome,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -130,8 +130,9 @@ class _QuizResultScreenState extends State<QuizResultScreen> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    AppTheme.primaryColor,
-                    AppTheme.primaryColor.withOpacity(0.8),
+                    Color(0xFF3E2723), 
+                    Color(0xFF8D6E63), // Light roast
+                    Color(0xFFFFCC80), // Honey
                   ],
                 ),
                 borderRadius: BorderRadius.only(
@@ -276,20 +277,20 @@ class _QuizResultScreenState extends State<QuizResultScreen> {
                 ],
               ),
             ),
-            Padding(
+            SizedBox(height: 20),            Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.analytics, color: AppTheme.primaryColor),
+                      Icon(Icons.analytics, color: AppTheme.primaryHome),
                       SizedBox(width: 8),
                       Text(
                         "Detailed Analysis",
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: AppTheme.textPrimaryColor,
+                          color: AppTheme.primaryHome,
                         ),
                       ),
                     ],
@@ -306,7 +307,7 @@ class _QuizResultScreenState extends State<QuizResultScreen> {
                     return Container(
                       margin: EdgeInsets.only(bottom: 16),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: AppTheme.surfaceHome,
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
@@ -344,7 +345,7 @@ class _QuizResultScreenState extends State<QuizResultScreen> {
                             'Question ${index + 1}',
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
-                              color: AppTheme.textPrimaryColor,
+                              color: AppTheme.backgroundColor,
                             ),
                           ),
                           subtitle: Text(
@@ -371,7 +372,7 @@ class _QuizResultScreenState extends State<QuizResultScreen> {
                                   Text(
                                     question.text,
                                     style: TextStyle(
-                                      color: AppTheme.textPrimaryColor,
+                                      color: AppTheme.backgroundColor,
                                       fontSize: 18,
                                     ),
                                     maxLines: 4,
@@ -417,7 +418,7 @@ class _QuizResultScreenState extends State<QuizResultScreen> {
                         Navigator.pop(context);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.primaryColor,
+                        backgroundColor: AppTheme.primaryHome,
                         padding: EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
