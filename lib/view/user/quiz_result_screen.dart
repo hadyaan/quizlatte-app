@@ -93,10 +93,11 @@ class _QuizResultScreenState extends State<QuizResultScreen> {
   }
 
   IconData _getPerformanceIcon(double scroe) {
-    if (scroe >= 0.9) return Icons.emoji_events;
-    if (scroe >= 0.8) return Icons.star;
-    if (scroe >= 0.6) return Icons.thumb_up;
-    if (scroe >= 0.4) return Icons.trending_up;
+    if (scroe == 1.0) return Icons.emoji_events;
+    if (scroe >= 0.9) return Icons.coffee_maker_rounded;
+    if (scroe >= 0.7) return Icons.star;
+    if (scroe >= 0.5) return Icons.thumb_up;
+    if (scroe >= 0.3) return Icons.trending_up;
     return Icons.refresh;
   }
 
@@ -107,11 +108,15 @@ class _QuizResultScreenState extends State<QuizResultScreen> {
   }
 
   String _getPerformanceMessage(double scroe) {
-    if (scroe >= 0.9) return "Outstanding!";
-    if (scroe >= 0.8) return "Great Job";
-    if (scroe >= 0.6) return "Good Effort!";
-    if (scroe >= 0.4) return "Keep Practicing!";
-    return "Try Again!";
+    if (scroe == 1.0)
+      return "Perfect Brew!"; // Perfect Brew! You're a Coffee Master!
+    if (scroe >= 0.9)
+      return "Barista-Level Genius!"; // “Espresso Shot of Brilliance!”
+    if (scroe >= 0.7) return "Smooth as a Latte!";
+    if (scroe >= 0.5) return "Aromatic Effort!"; // Half-full cup of progress!
+    if (scroe >= 0.3)
+      return "Needs more brewing..."; // Drip by drip, you’re learning!
+    return "Refill ur cup, try again!";
   }
 
   @override
@@ -130,7 +135,7 @@ class _QuizResultScreenState extends State<QuizResultScreen> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Color(0xFF3E2723), 
+                    Color(0xFF3E2723),
                     Color(0xFF8D6E63), // Light roast
                     Color(0xFFFFCC80), // Honey
                   ],
@@ -216,7 +221,7 @@ class _QuizResultScreenState extends State<QuizResultScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(30),
+                      borderRadius: BorderRadius.circular(40),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withOpacity(0.1),
@@ -234,12 +239,14 @@ class _QuizResultScreenState extends State<QuizResultScreen> {
                           size: 28,
                         ),
                         SizedBox(width: 8),
-                        Text(
-                          _getPerformanceMessage(score),
-                          style: TextStyle(
-                            color: _getScoreColor(score),
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
+                        Flexible(
+                          child: Text(
+                            _getPerformanceMessage(score),
+                            style: TextStyle(
+                              color: _getScoreColor(score),
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ],
@@ -277,7 +284,8 @@ class _QuizResultScreenState extends State<QuizResultScreen> {
                 ],
               ),
             ),
-            SizedBox(height: 20),            Padding(
+            SizedBox(height: 20),
+            Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 children: [

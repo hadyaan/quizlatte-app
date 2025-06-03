@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "Quizoria",
+      title: "Quizlatte",
       theme: AppTheme.theme,
       home: HomeScreen(),
     );

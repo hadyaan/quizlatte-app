@@ -98,61 +98,66 @@ class _ManageCategoriesScreen extends State<ManageCategoriesScreen> {
             itemCount: categories.length,
             itemBuilder: (context, index) {
               final Category category = categories[index];
-              return Card(
-                margin: EdgeInsets.only(bottom: 12),
-                child: ListTile(
-                  contentPadding: EdgeInsets.all(16),
-                  leading: Container(
-                    padding: EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: AppTheme.primaryColor.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: Card(
+                  color: AppTheme.cardColor,
+                  margin: EdgeInsets.only(bottom: 8),
+                  child: ListTile(
+                    contentPadding: EdgeInsets.all(16),
+                    leading: Container(
+                      padding: EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: AppTheme.primaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Icon(
+                        Icons.category_outlined,
+                        color: AppTheme.primaryColor,
+                      ),
                     ),
-                    child: Icon(
-                      Icons.category_outlined,
-                      color: AppTheme.primaryColor,
+                    title: Text(
+                      category.name,
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
-                  ),
-                  title: Text(
-                    category.name,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  subtitle: Text(category.description),
-                  trailing: PopupMenuButton(
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        value: "edit",
-                        child: ListTile(
-                          leading: Icon(
-                            Icons.edit,
-                            color: AppTheme.primaryColor,
+                    
+                    subtitle: Text(category.description),
+                    trailing: PopupMenuButton(
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          value: "edit",
+                          child: ListTile(
+                            leading: Icon(
+                              Icons.edit,
+                              color: AppTheme.primaryColor,
+                            ),
+                            title: Text("Edit"),
+                            contentPadding: EdgeInsets.zero,
                           ),
-                          title: Text("Edit"),
-                          contentPadding: EdgeInsets.zero,
                         ),
-                      ),
-                      PopupMenuItem(
-                        value: "delete",
-                        child: ListTile(
-                          leading: Icon(Icons.delete, color: Colors.redAccent),
-                          title: Text("Delete"),
-                          contentPadding: EdgeInsets.zero,
+                        PopupMenuItem(
+                          value: "delete",
+                          child: ListTile(
+                            leading: Icon(Icons.delete, color: Colors.redAccent),
+                            title: Text("Delete"),
+                            contentPadding: EdgeInsets.zero,
+                          ),
                         ),
-                      ),
-                    ],
-                    onSelected: (value) {
-                      _handleCategoryAction(context, value, category);
+                      ],
+                      onSelected: (value) {
+                        _handleCategoryAction(context, value, category);
+                      },
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ManageQuizzesScreen(categoryId: category.id, categoryName: category.name,),
+                        ),
+                      );
                     },
                   ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            ManageQuizzesScreen(categoryId: category.id, categoryName: category.name,),
-                      ),
-                    );
-                  },
                 ),
               );
             },

@@ -257,7 +257,8 @@ class _ManageQuizzesScreenState extends State<ManageQuizzesScreen> {
                   itemBuilder: (context, index) {
                     final Quiz quiz = quizzes[index];
                     return Card(
-                      margin: EdgeInsets.only(bottom: 12),
+                      color: AppTheme.cardColor,
+                      margin: EdgeInsets.only(bottom: 16),
                       child: ListTile(
                         contentPadding: EdgeInsets.all(16),
                         leading: Container(

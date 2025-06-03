@@ -256,6 +256,7 @@ class _EditQuizScreenState extends State<EditQuizScreen> {
                   final QuestionFromItem question = entry.value;
 
                   return Card(
+                    color: AppTheme.cardColor,
                     margin: EdgeInsets.only(bottom: 16),
                     child: Padding(
                       padding: EdgeInsets.all(16),

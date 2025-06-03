@@ -93,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             title: Text(
-              "Quizoria",
+              "Quizlatte",
               style: GoogleFonts.pacifico(),
               // TextStyle(
               //   fontSize: 24,
