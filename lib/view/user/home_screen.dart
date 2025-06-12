@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:quiz/model/category.dart';
-import 'package:quiz/theme/theme.dart'; // Pastikan AppTheme.surfaceHome dan AppTheme.backgroundColor didefinisikan dengan baik di sini
+import 'package:quiz/theme/theme.dart';
 import 'package:quiz/view/user/category_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -92,15 +93,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 bottomRight: Radius.circular(20),
               ),
             ),
-            title: Text(
-              "Quizlatte",
-              style: GoogleFonts.pacifico(),
-              // TextStyle(
-              //   fontSize: 24,
-              //   fontWeight: FontWeight.bold,
-              //   color: Colors.white,
-              // ),
-            ),
+            title: Text("Quizlatte", style: GoogleFonts.pacifico()),
+            actions: [
+              IconButton(
+                icon: Icon(Icons.logout),
+                color: Colors.white,
+                onPressed: () async {
+                  await FirebaseAuth.instance.signOut();
+                  if (context.mounted) {
+                    Navigator.of(context).pushReplacementNamed('/');
+                  }
+                },
+              ),
+            ],
             flexibleSpace: FlexibleSpaceBar(
               background: SafeArea(
                 child: Column(
