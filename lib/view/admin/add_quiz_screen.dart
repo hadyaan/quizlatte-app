@@ -41,6 +41,7 @@ class _AddQuizScreenState extends State<AddQuizScreen> {
   bool _isLoading = false;
   String? _selectedCategoryId;
   List<QuestionFromItem> _questionsItems = [];
+  bool _isShuffled = false;
 
   @override
   void initState() {
@@ -119,6 +120,7 @@ class _AddQuizScreenState extends State<AddQuizScreen> {
               timeLImit: int.parse(_timeLimitController.text),
               questions: questions,
               createdAt: DateTime.now(),
+              isShuffled: _isShuffled,
             ).toMap(),
           );
 
@@ -282,30 +284,52 @@ class _AddQuizScreenState extends State<AddQuizScreen> {
                   },
                 ),
                 SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Acak Soal',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: AppTheme.textPrimaryColor,
+                      ),
+                    ),
+                    Switch(
+                      value: _isShuffled,
+                      activeColor: AppTheme.primaryColor,
+                      onChanged: (value) {
+                        setState(() {
+                          _isShuffled = value;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Questions',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.textPrimaryColor,
-                          ),
-                        ),
-                        ElevatedButton.icon(
-                          onPressed: _addQuestion,
-                          label: Text("Add Question"),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppTheme.primaryColor,
-                            foregroundColor: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Text(
+                    //       'Questions',
+                    //       style: TextStyle(
+                    //         fontSize: 20,
+                    //         fontWeight: FontWeight.bold,
+                    //         color: AppTheme.textPrimaryColor,
+                    //       ),
+                    //     ),
+                    //     ElevatedButton.icon(
+                    //       onPressed: _addQuestion,
+                    //       label: Text("Add Question"),
+                    //       style: ElevatedButton.styleFrom(
+                    //         backgroundColor: AppTheme.primaryColor,
+                    //         foregroundColor: Colors.white,
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                     SizedBox(height: 16),
                     ..._questionsItems.asMap().entries.map((entry) {
                       final index = entry.key;
@@ -411,31 +435,42 @@ class _AddQuizScreenState extends State<AddQuizScreen> {
                         ),
                       );
                     }),
-                    SizedBox(height: 32),
-                    Center(
-                      child: SizedBox(
-                        height: 50,
-                        child: ElevatedButton(
-                          onPressed: _isLoading ? null : _saveQuiz,
-                          child: _isLoading
-                              ? SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white,
+                    SizedBox(height: 24),
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          ElevatedButton.icon(
+                            onPressed: _addQuestion,
+                            label: Text("Add Question"),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppTheme.primaryColor,
+                              foregroundColor: Colors.white,
+                            ),
+                          ),
+                          ElevatedButton(
+                            onPressed: _isLoading ? null : _saveQuiz,
+                            child: _isLoading
+                                ? SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white,
+                                      ),
+                                      strokeWidth: 2,
                                     ),
-                                    strokeWidth: 2,
+                                  )
+                                : Text(
+                                    "Save Quiz",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                )
-                              : Text(
-                                  "Save Quiz",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ],

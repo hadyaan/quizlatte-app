@@ -26,17 +26,44 @@ class _QuizPlayScreenState extends State<QuizPlayScreen>
   int _remainingMinutes = 0;
   int _remainingSeconds = 0;
   Timer? _timer;
+  late List<Question> _shuffledQuestions;
+  late List<int> _questionOrder;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _pageController = PageController();
+
     _totalMinutes = widget.quiz.timeLImit;
     _remainingMinutes = _totalMinutes;
     _remainingSeconds = 0;
 
+    // Generate index order
+    _questionOrder = List.generate(
+      widget.quiz.questions.length,
+      (index) => index,
+    );
+
+    // Jika shuffle diaktifkan, acak urutan index-nya
+    if (widget.quiz.isShuffled) {
+      _fisherYatesShuffle(_questionOrder);
+    }
+
+    // Buat list soal berdasarkan urutan index yang sudah diacak
+    _shuffledQuestions = _questionOrder
+        .map((i) => widget.quiz.questions[i])
+        .toList();
+
     _startTimer();
+  }
+
+  void _fisherYatesShuffle(List<int> list) {
+    for (int i = list.length - 1; i > 0; i--) {
+      final j = (DateTime.now().microsecond + i) % (i + 1);
+      final temp = list[i];
+      list[i] = list[j];
+      list[j] = temp;
+    }
   }
 
   void _startTimer() {
@@ -90,6 +117,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen>
           totalQuestions: widget.quiz.questions.length,
           correctAnswers: correctAnswers,
           selectedAnswer: _selectedAnswer,
+          questionOrder: _questionOrder,
         ),
       ),
     );
@@ -97,13 +125,14 @@ class _QuizPlayScreenState extends State<QuizPlayScreen>
 
   int _calculateScroe() {
     int correctAnswers = 0;
-    for (int i = 0; i < widget.quiz.questions.length; i++) {
+    for (int i = 0; i < _shuffledQuestions.length; i++) {
       final selectedAnswer = _selectedAnswer[i];
       if (selectedAnswer != null &&
-          selectedAnswer == widget.quiz.questions[i].correctOptionIndex) {
+          selectedAnswer == _shuffledQuestions[i].correctOptionIndex) {
         correctAnswers++;
       }
     }
+
     return correctAnswers;
   }
 
@@ -194,7 +223,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen>
                       begin: 0,
                       end:
                           (_currentQuestionIndex + 1) /
-                          widget.quiz.questions.length,
+                          _shuffledQuestions.length,
                     ),
                     duration: Duration(milliseconds: 300),
                     builder: (context, progress, child) {
@@ -219,14 +248,14 @@ class _QuizPlayScreenState extends State<QuizPlayScreen>
               child: PageView.builder(
                 controller: _pageController,
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: widget.quiz.questions.length,
+                itemCount: _shuffledQuestions.length,
                 onPageChanged: (index) {
                   setState(() {
                     _currentQuestionIndex = index;
                   });
                 },
                 itemBuilder: (context, index) {
-                  final question = widget.quiz.questions[index];
+                  final question = _shuffledQuestions[index];
                   return _buildQuestionCard(question, index);
                 },
               ),
@@ -339,11 +368,12 @@ class _QuizPlayScreenState extends State<QuizPlayScreen>
             height: 55,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF4CAF50),
+                backgroundColor: _selectedAnswer[index] != null
+                    ? Color(0xFF4CAF50)
+                    : Colors.grey,
               ),
-              onPressed: () {
-                _selectedAnswer[index] != null ? _nextQuestion() : null;
-              },
+              onPressed: _selectedAnswer[index] != null ? _nextQuestion : null,
+
               child: Text(
                 index == widget.quiz.questions.length - 1
                     ? "Finish Quiz"

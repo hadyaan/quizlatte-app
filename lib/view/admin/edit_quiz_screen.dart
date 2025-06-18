@@ -38,6 +38,7 @@ class _EditQuizScreenState extends State<EditQuizScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   bool _isLoading = false;
   late List<QuestionFromItem> _questionsItems;
+  bool _isShuffleEnabled = false;
 
   @override
   void initState() {
@@ -62,6 +63,7 @@ class _EditQuizScreenState extends State<EditQuizScreen> {
     _timeLimitController = TextEditingController(
       text: widget.quiz.timeLImit.toString(),
     );
+    _isShuffleEnabled = widget.quiz.isShuffled ?? false;
 
     _questionsItems = widget.quiz.questions.map((question) {
       return QuestionFromItem(
@@ -126,6 +128,7 @@ class _EditQuizScreenState extends State<EditQuizScreen> {
         timeLimit: int.parse(_timeLimitController.text),
         questions: questions,
         createdAt: widget.quiz.createdAt,
+        isShuffled: _isShuffleEnabled,
       );
 
       await _firestore
@@ -226,155 +229,151 @@ class _EditQuizScreenState extends State<EditQuizScreen> {
               },
             ),
             SizedBox(height: 16),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Questions',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.textPrimaryColor,
-                      ),
-                    ),
-                    ElevatedButton.icon(
-                      onPressed: _addQuestion,
-                      label: Text("Add Question"),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.primaryColor,
-                        foregroundColor: Colors.white,
-                      ),
-                    ),
-                  ],
+            SwitchListTile(
+              title: Text(
+                'Acak Soal',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textPrimaryColor,
                 ),
-                SizedBox(height: 16),
-                ..._questionsItems.asMap().entries.map((entry) {
-                  final index = entry.key;
-                  final QuestionFromItem question = entry.value;
+              ),
+              activeColor: AppTheme.primaryColor,
+              value: _isShuffleEnabled,
+              onChanged: (value) {
+                setState(() {
+                  _isShuffleEnabled = value;
+                });
+              },
+            ),
 
-                  return Card(
-                    color: AppTheme.cardColor,
-                    margin: EdgeInsets.only(bottom: 16),
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+            SizedBox(height: 16),
+            ..._questionsItems.asMap().entries.map((entry) {
+              final index = entry.key;
+              final QuestionFromItem question = entry.value;
+
+              return Card(
+                color: AppTheme.cardColor,
+                margin: EdgeInsets.only(bottom: 16),
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Question ${index + 1}",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppTheme.primaryColor,
-                                ),
-                              ),
-                              if (_questionsItems.length > 1)
-                                IconButton(
-                                  onPressed: () {
-                                    _removeQuestion(index);
-                                  },
-                                  icon: Icon(
-                                    Icons.delete,
-                                    color: Colors.redAccent,
-                                  ),
-                                ),
-                            ],
-                          ),
-                          SizedBox(height: 16),
-                          TextFormField(
-                            controller: question.questionController,
-                            decoration: InputDecoration(
-                              labelText: "Question Title",
-                              hintText: "Enter Question",
-                              prefixIcon: Icon(
-                                Icons.question_answer,
-                                color: AppTheme.primaryColor,
-                              ),
+                          Text(
+                            "Question ${index + 1}",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.primaryColor,
                             ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "Please enter question";
-                              }
-                              return null;
-                            },
                           ),
-                          SizedBox(height: 16),
-                          ...question.optionsControllers.asMap().entries.map((
-                            entry,
-                          ) {
-                            final optionIndex = entry.key;
-                            final controller = entry.value;
-
-                            return Padding(
-                              padding: EdgeInsets.only(bottom: 8),
-                              child: Row(
-                                children: [
-                                  Radio<int>(
-                                    activeColor: AppTheme.primaryColor,
-                                    value: optionIndex,
-                                    groupValue: question.correctOptionIndex,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        question.correctOptionIndex = value!;
-                                      });
-                                    },
-                                  ),
-                                  Expanded(
-                                    child: TextFormField(
-                                      controller: controller,
-                                      decoration: InputDecoration(
-                                        labelText: "Option ${optionIndex + 1}",
-                                        hintText: "Enter Option",
-                                      ),
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return "Please enter option";
-                                        }
-                                        return null;
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }),
+                          if (_questionsItems.length > 1)
+                            IconButton(
+                              onPressed: () {
+                                _removeQuestion(index);
+                              },
+                              icon: Icon(Icons.delete, color: Colors.redAccent),
+                            ),
                         ],
                       ),
-                    ),
-                  );
-                }),
-                SizedBox(height: 32),
-                Center(
-                  child: SizedBox(
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: _isLoading ? null : _updateQuiz,
-                      child: _isLoading
-                          ? SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  Colors.white,
+                      SizedBox(height: 16),
+                      TextFormField(
+                        controller: question.questionController,
+                        decoration: InputDecoration(
+                          labelText: "Question Title",
+                          hintText: "Enter Question",
+                          prefixIcon: Icon(
+                            Icons.question_answer,
+                            color: AppTheme.primaryColor,
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Please enter question";
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 16),
+                      ...question.optionsControllers.asMap().entries.map((
+                        entry,
+                      ) {
+                        final optionIndex = entry.key;
+                        final controller = entry.value;
+
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: 8),
+                          child: Row(
+                            children: [
+                              Radio<int>(
+                                activeColor: AppTheme.primaryColor,
+                                value: optionIndex,
+                                groupValue: question.correctOptionIndex,
+                                onChanged: (value) {
+                                  setState(() {
+                                    question.correctOptionIndex = value!;
+                                  });
+                                },
+                              ),
+                              Expanded(
+                                child: TextFormField(
+                                  controller: controller,
+                                  decoration: InputDecoration(
+                                    labelText: "Option ${optionIndex + 1}",
+                                    hintText: "Enter Option",
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "Please enter option";
+                                    }
+                                    return null;
+                                  },
                                 ),
-                                strokeWidth: 2,
                               ),
-                            )
-                          : Text(
-                              "Update Quiz",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                    ),
+                            ],
+                          ),
+                        );
+                      }),
+                    ],
                   ),
+                ),
+              );
+            }),
+            SizedBox(height: 32),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: _addQuestion,
+                  label: Text("Add Question"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.primaryColor,
+                    foregroundColor: Colors.white,
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: _isLoading ? null : _updateQuiz,
+                  child: _isLoading
+                      ? SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : Text(
+                          "Update Quiz",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                 ),
               ],
             ),

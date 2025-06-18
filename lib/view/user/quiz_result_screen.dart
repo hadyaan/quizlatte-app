@@ -9,12 +9,14 @@ class QuizResultScreen extends StatefulWidget {
   final int totalQuestions;
   final int correctAnswers;
   final Map<int, int?> selectedAnswer;
+  final List<int> questionOrder;
   const QuizResultScreen({
     super.key,
     required this.quiz,
     required this.totalQuestions,
     required this.correctAnswers,
     required this.selectedAnswer,
+    required this.questionOrder,
   });
 
   @override
@@ -304,10 +306,11 @@ class _QuizResultScreenState extends State<QuizResultScreen> {
                     ],
                   ),
                   SizedBox(height: 16),
-                  ...widget.quiz.questions.asMap().entries.map((entry) {
-                    final index = entry.key;
-                    final question = entry.value;
-                    final selectedAnswer = widget.selectedAnswer[index];
+                  ...widget.questionOrder.asMap().entries.map((entry) {
+                    final displayIndex = entry.key; // Posisi soal di sesi ini
+                    final actualIndex = entry.value; // Index asli dari soal
+                    final question = widget.quiz.questions[actualIndex];
+                    final selectedAnswer = widget.selectedAnswer[displayIndex];
                     final isCorrect =
                         selectedAnswer != null &&
                         selectedAnswer == question.correctOptionIndex;
@@ -350,7 +353,7 @@ class _QuizResultScreenState extends State<QuizResultScreen> {
                             ),
                           ),
                           title: Text(
-                            'Question ${index + 1}',
+                            'Question ${displayIndex + 1}',
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               color: AppTheme.backgroundColor,
@@ -410,7 +413,7 @@ class _QuizResultScreenState extends State<QuizResultScreen> {
                     ).animate().slideX(
                       begin: 0.3,
                       duration: Duration(milliseconds: 300),
-                      delay: Duration(milliseconds: 100 * index),
+                      delay: Duration(milliseconds: 100 * displayIndex),
                     );
                   }).toList(),
                 ],
