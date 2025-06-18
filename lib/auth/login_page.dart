@@ -62,9 +62,10 @@ class _LoginPageState extends State<LoginPage> {
   void _onSubmitAnimationCompleted() {
     final user = _auth.currentUser;
     if (user != null) {
-      Navigator.of(
+      Navigator.pushReplacement(
         context,
-      ).pushReplacement(MaterialPageRoute(builder: (_) => const HomeScreen()));
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
     }
   }
 

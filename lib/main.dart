@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:quiz/auth/login_page.dart';
 import 'package:quiz/firebase_options.dart';
 import 'package:quiz/theme/theme.dart';
@@ -21,12 +22,28 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: "Quizlatte",
       theme: AppTheme.theme,
-      initialRoute: '/',
+      home: const RootRedirect(),
       routes: {
-        '/': (context) => const LoginPage(),
         '/home': (context) => const HomeScreen(),
-        '/admin': (context) => const AdminHomeScreen(), // jika kamu butuh rute untuk admin
+        '/admin': (context) => const AdminHomeScreen(),
       },
     );
+  }
+}
+
+class RootRedirect extends StatelessWidget {
+  const RootRedirect({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      // Jika user masih login, langsung ke home
+      return const HomeScreen();
+    } else {
+      // Kalau belum login, tampilkan login
+      return const LoginPage();
+    }
   }
 }
