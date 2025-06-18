@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:quiz/auth/login_page.dart';
 import 'package:quiz/firebase_options.dart';
 import 'package:quiz/theme/theme.dart';
@@ -31,19 +32,49 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class RootRedirect extends StatelessWidget {
+class RootRedirect extends StatefulWidget {
   const RootRedirect({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  State<RootRedirect> createState() => _RootRedirectState();
+}
+
+class _RootRedirectState extends State<RootRedirect> {
+  Widget? _startScreen;
+
+  @override
+  void initState() {
+    super.initState();
+    _determineStartScreen();
+  }
+
+  Future<void> _determineStartScreen() async {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
-      // Jika user masih login, langsung ke home
-      return const HomeScreen();
+      final prefs = await SharedPreferences.getInstance();
+      final role = prefs.getString('user_role') ?? 'user';
+
+      setState(() {
+        if (role == 'admin') {
+          _startScreen = const AdminHomeScreen();
+        } else {
+          _startScreen = const HomeScreen();
+        }
+      });
     } else {
-      // Kalau belum login, tampilkan login
-      return const LoginPage();
+      setState(() {
+        _startScreen = const LoginPage();
+      });
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_startScreen == null) {
+      // Tampilkan loading sementara menunggu async selesai
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+    return _startScreen!;
   }
 }

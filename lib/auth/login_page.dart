@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:quiz/view/user/home_screen.dart';
+import 'package:quiz/view/admin/admin_home_screen.dart';
 import 'package:quiz/theme/theme.dart';
 
 class LoginPage extends StatefulWidget {
@@ -13,6 +16,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   bool _isSignup = false;
   Duration get loadingTime => const Duration(milliseconds: 2000);
 
@@ -35,10 +39,14 @@ class _LoginPageState extends State<LoginPage> {
       if (data.name == null || data.password == null) {
         return 'Email and password cannot be empty';
       }
-      await _auth.createUserWithEmailAndPassword(
+      final userCredential = await _auth.createUserWithEmailAndPassword(
         email: data.name!,
         password: data.password!,
       );
+      await _firestore.collection('users').doc(userCredential.user!.uid).set({
+        'email': data.name,
+        'role': 'user', // default role user
+      });
       return null;
     } on FirebaseAuthException catch (e) {
       return e.message ?? 'Signup failed';
@@ -57,15 +65,31 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _logout() async {
     await _auth.signOut();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('user_role'); // Hapus saat logout
   }
 
-  void _onSubmitAnimationCompleted() {
+  void _onSubmitAnimationCompleted() async {
     final user = _auth.currentUser;
     if (user != null) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-      );
+      final snapshot = await _firestore.collection('users').doc(user.uid).get();
+      final role = snapshot.data()?['role'] ?? 'user';
+
+      // Simpan role ke SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('user_role', role);
+
+      if (role == 'admin') {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const AdminHomeScreen()),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
+      }
     }
   }
 
@@ -78,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
         onSignup: _signupUser,
         onRecoverPassword: _recoverPassword,
         onSubmitAnimationCompleted: _onSubmitAnimationCompleted,
-        headerWidget: Padding(
+        headerWidget: const Padding(
           padding: EdgeInsets.only(bottom: 16),
           child: Text(
             'Welcome to Quizlatte!',
@@ -90,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
         theme: LoginTheme(
-          primaryColor: AppTheme.cardColor, // Coklat tua
+          primaryColor: AppTheme.cardColor,
           accentColor: AppTheme.cardColor,
           cardTheme: const CardTheme(
             color: Color(0xFF795548),
@@ -99,7 +123,7 @@ class _LoginPageState extends State<LoginPage> {
               borderRadius: BorderRadius.all(Radius.circular(24)),
             ),
           ),
-          textFieldStyle: TextStyle(color: Colors.black),
+          textFieldStyle: const TextStyle(color: Colors.black),
           inputTheme: const InputDecorationTheme(
             filled: true,
             fillColor: Color(0xFF795548),

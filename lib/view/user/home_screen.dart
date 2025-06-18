@@ -96,12 +96,42 @@ class _HomeScreenState extends State<HomeScreen> {
             title: Text("Quizlatte", style: GoogleFonts.pacifico()),
             actions: [
               IconButton(
-                icon: Icon(Icons.logout),
-                color: Colors.white,
+                icon: const Icon(Icons.logout),
+                tooltip: 'Logout',
                 onPressed: () async {
-                  await FirebaseAuth.instance.signOut();
-                  if (context.mounted) {
-                    Navigator.of(context).pushReplacementNamed('/');
+                  final shouldLogout = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      backgroundColor: AppTheme.primaryHome,
+                      title: const Text('Confirm Logout'),
+                      content: const Text('Are you sure you want to log out?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: const Text(
+                            'Cancel',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => Navigator.of(context).pop(true),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                          ),
+                          child: const Text('Logout'),
+                        ),
+                      ],
+                    ),
+                  );
+
+                  if (shouldLogout == true) {
+                    await FirebaseAuth.instance.signOut();
+                    if (context.mounted) {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/', // Ganti dengan route ke LoginPage jika berbeda
+                        (route) => false,
+                      );
+                    }
                   }
                 },
               ),
@@ -151,6 +181,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 controller: _searchController,
                                 focusNode: _searchFocusNode,
                                 onChanged: (value) => _filterCategories(value),
+                                style: TextStyle(
+                                  color: AppTheme.backgroundColor,
+                                ),
                                 decoration: InputDecoration(
                                   fillColor: AppTheme
                                       .surfaceHome, // Warna latar belakang untuk input search

@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:quiz/model/quiz.dart';
 import 'package:quiz/theme/theme.dart';
+import 'package:quiz/view/user/quiz_play_screen.dart';
 
 class QuizResultScreen extends StatefulWidget {
   final Quiz quiz;
@@ -426,8 +427,14 @@ class _QuizResultScreenState extends State<QuizResultScreen> {
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => QuizPlayScreen(quiz: widget.quiz),
+                          ),
+                        );
                       },
+
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.primaryHome,
                         padding: EdgeInsets.symmetric(vertical: 16),

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz/theme/theme.dart';
@@ -161,10 +162,49 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppTheme.backgroundColor,
-        title: Text('Admin Dashboard'),
-        titleTextStyle: TextStyle(fontWeight: FontWeight.bold),
+        title: const Text('Admin Dashboard'),
+        titleTextStyle: const TextStyle(fontWeight: FontWeight.bold),
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'Logout',
+            onPressed: () async {
+              final shouldLogout = await showDialog<bool>(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Confirm Logout'),
+                  content: const Text('Are you sure you want to log out?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: const Text('Cancel'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () => Navigator.of(context).pop(true),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                      ),
+                      child: const Text('Logout'),
+                    ),
+                  ],
+                ),
+              );
+
+              if (shouldLogout == true) {
+                await FirebaseAuth.instance.signOut();
+                if (context.mounted) {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    '/', // Ganti dengan route ke LoginPage jika berbeda
+                    (route) => false,
+                  );
+                }
+              }
+            },
+          ),
+        ],
       ),
+
       body: FutureBuilder(
         future: _fetchStatistic(),
         builder: (context, snapshot) {
@@ -466,7 +506,6 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                                   );
                                 },
                                 AppTheme.textHome,
-                                
                               ),
                               _buildDashboardCard(
                                 context,
